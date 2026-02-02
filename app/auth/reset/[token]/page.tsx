@@ -1,7 +1,7 @@
 import { confirmResetAction } from "../actions";
 
-export default function ConfirmResetPage({ params }: { params: { token: string } }) {
-  const token = params.token;
+export default async function ConfirmResetPage({ params }: { params: Promise<{ token: string }> }) {
+  const { token } = await params;
   return (
     <main className="flex min-h-screen items-center justify-center bg-zinc-50 px-6">
       <div className="w-full max-w-md space-y-6 rounded-2xl bg-white p-8 shadow-sm ring-1 ring-zinc-200">
