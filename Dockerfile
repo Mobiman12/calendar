@@ -35,7 +35,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN apk add --no-cache libc6-compat
 COPY --from=deps /app/node_modules ./node_modules
 COPY . ./
-RUN corepack enable
+RUN corepack enable && pnpm prisma:generate
 RUN addgroup -S nextjs && adduser -S nextjs -G nextjs
 USER nextjs
 CMD ["pnpm", "worker:notifications"]
