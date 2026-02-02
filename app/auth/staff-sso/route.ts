@@ -167,9 +167,9 @@ export async function GET(request: NextRequest) {
       }
       if (location) {
         const displayName =
-          normalizeString(payload?.displayName) ??
-          normalizeString(payload?.username) ??
-          [payload?.firstName, payload?.lastName].filter(Boolean).join(" ").trim() ||
+          (normalizeString(payload?.displayName) ??
+            normalizeString(payload?.username) ??
+            [payload?.firstName, payload?.lastName].filter(Boolean).join(" ").trim()) ||
           "Mitarbeiter";
         const [firstName, lastName] = (() => {
           if (payload?.firstName || payload?.lastName) {

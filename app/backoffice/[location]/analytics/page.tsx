@@ -383,7 +383,7 @@ export default async function AnalyticsPage({
   const staffMap = new Map(
     staffRecords.map((staff) => [
       staff.id,
-      staff.displayName ?? `${staff.firstName ?? ""} ${staff.lastName ?? ""}`.trim() || "Unbekannt",
+      (staff.displayName ?? `${staff.firstName ?? ""} ${staff.lastName ?? ""}`.trim()) || "Unbekannt",
     ]),
   );
   const customerMap = new Map(
