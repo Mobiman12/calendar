@@ -14,20 +14,6 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . ./
 RUN corepack enable && pnpm prisma:generate && pnpm build
 
-FROM node:20-alpine AS runner
-WORKDIR /app
-ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED=1
-RUN addgroup -S nextjs && adduser -S nextjs -G nextjs
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
-USER nextjs
-
-EXPOSE 3000
-ENV PORT=3000
-CMD ["node", "server.js"]
-
 FROM node:20-alpine AS worker
 WORKDIR /app
 ENV NODE_ENV=production
@@ -39,3 +25,18 @@ RUN corepack enable && pnpm prisma:generate
 RUN addgroup -S nextjs && adduser -S nextjs -G nextjs
 USER nextjs
 CMD ["pnpm", "worker:notifications"]
+
+FROM node:20-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+RUN addgroup -S nextjs && adduser -S nextjs -G nextjs
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+USER nextjs
+
+EXPOSE 3000
+ENV PORT=3000
+CMD ["node", "server.js"]
