@@ -992,6 +992,11 @@ export async function POST(request: NextRequest) {
       }
 
       if (reminderCustomer && locationRecord?.metadata) {
+        const reminderCustomerPayload = {
+          id: reminderCustomer.id,
+          email: reminderCustomer.email ?? null,
+          phone: reminderCustomer.phone ?? null,
+        };
         await Promise.all(
           results.map((entry) =>
             scheduleAppointmentReminders({
@@ -1000,7 +1005,7 @@ export async function POST(request: NextRequest) {
                 startsAt: entry.startsAt,
                 endsAt: entry.endsAt,
               },
-              customer: reminderCustomer,
+              customer: reminderCustomerPayload,
               location: { id: payload.locationId },
               locationMetadata: locationRecord?.metadata,
             }),
