@@ -1,0 +1,17 @@
+node_modules
+.next
+out
+dist
+build
+coverage
+.cache
+.turbo
+.git
+.env
+.env.*
+.DS_Store
+backups
+archive
+archives
+calendar_backups
+*.log

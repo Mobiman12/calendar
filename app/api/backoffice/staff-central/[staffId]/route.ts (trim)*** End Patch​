@@ -1,0 +1,7 @@
+export async function POST(
+  request: Request,
+  context: { params: Promise<{ staffId: string }> },
+) {
+  // Method override für Form-POST
+  return PATCH(request, context);
+}
