@@ -73,14 +73,15 @@ export async function PATCH(request: NextRequest, context: { params: Promise<{ l
   const session = verifySessionToken(sessionToken);
   const tenantId = request.headers.get("x-tenant-id") ?? session?.tenantId ?? process.env.DEFAULT_TENANT_ID;
 
-  let locationRecord = await prisma.location.findFirst(
-    tenantId
-      ? { where: { tenantId, slug: location }, select: { id: true, timezone: true } }
-      : { where: { slug: location }, select: { id: true, timezone: true } },
-  );
-  if (!locationRecord && tenantId) {
-    locationRecord = await prisma.location.findFirst({ where: { slug: location }, select: { id: true, timezone: true } });
+  if (!tenantId) {
+    return NextResponse.json({ error: "Tenant not found" }, { status: 401 });
   }
+
+  const locationSelect = { id: true, timezone: true };
+  const locationRecord = await prisma.location.findFirst({
+    where: { tenantId, slug: location },
+    select: locationSelect,
+  });
 
   if (!locationRecord) {
     return NextResponse.json({ error: "Location not found" }, { status: 404 });
