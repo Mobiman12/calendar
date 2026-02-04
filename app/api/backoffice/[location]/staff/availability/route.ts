@@ -422,17 +422,19 @@ export async function GET(request: Request, context: { params: Promise<{ locatio
         rangeStart,
         rangeEnd,
         client,
-      ).catch((error) => {
+      ).catch((error): AvailabilityPayload => {
         console.error("[staff-availability] Berechnung fehlgeschlagen", error);
         return { data: {}, status: {} };
       });
 
+      const shiftPlanData = shiftPlanResult.data as Record<string, AvailabilityBucket>;
+      const shiftPlanStatus = shiftPlanResult.status as AvailabilityStatusByStaff;
       const merged: Record<string, AvailabilityBucket> = {};
       const status: AvailabilityStatusByStaff = {};
       for (const staff of staffMembers) {
-        merged[staff.id] = shiftPlanResult.data[staff.id] ?? {};
-        if (shiftPlanResult.status[staff.id]) {
-          status[staff.id] = shiftPlanResult.status[staff.id];
+        merged[staff.id] = shiftPlanData[staff.id] ?? {};
+        if (shiftPlanStatus[staff.id]) {
+          status[staff.id] = shiftPlanStatus[staff.id];
         }
       }
       computeMs = Date.now() - computeStart;
