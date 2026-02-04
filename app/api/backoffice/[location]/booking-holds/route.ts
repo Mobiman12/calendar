@@ -109,7 +109,9 @@ export async function POST(
     }
 
     const serviceNames = Array.isArray(payload?.serviceNames)
-      ? payload.serviceNames.filter((value): value is string => typeof value === "string" && value.trim().length > 0)
+      ? payload.serviceNames.filter(
+          (value: unknown): value is string => typeof value === "string" && value.trim().length > 0,
+        )
       : undefined;
     const createdByStaffId = typeof payload?.createdByStaffId === "string" ? payload.createdByStaffId : null;
     const createdByNameRaw = typeof payload?.createdByName === "string" ? payload.createdByName.trim() : "";
