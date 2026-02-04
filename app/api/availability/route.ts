@@ -371,10 +371,7 @@ export async function GET(request: NextRequest) {
         isSmart: slot.isSmart ? true : undefined,
       };
     })
-    .filter(
-      (slot): slot is { id: string; start: string; end: string; staffId?: string; staffName?: string; locationId?: string } =>
-        Boolean(slot),
-    );
+    .filter(Boolean) as AvailabilityResponse["data"];
 
   const responsePayload: AvailabilityResponse = {
     data: mapped,

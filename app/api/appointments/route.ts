@@ -992,10 +992,10 @@ export async function POST(request: NextRequest) {
       }
 
       if (reminderCustomer && locationRecord?.metadata) {
-        const reminderCustomerPayload = {
-          id: reminderCustomer.id,
-          email: reminderCustomer.email ?? null,
-          phone: reminderCustomer.phone ?? null,
+        const reminderCustomerPayload = reminderCustomer as {
+          id: string;
+          email?: string | null;
+          phone?: string | null;
         };
         await Promise.all(
           results.map((entry) =>
