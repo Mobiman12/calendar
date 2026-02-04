@@ -386,7 +386,10 @@ async function sendOnlineConfirmationEmail(params: {
     },
   });
 
-  if (!appointment?.customer?.email) return;
+  if (!appointment || !appointment.customer || !appointment.customer.email) return;
+  const customer = appointment.customer;
+  const customerEmail = customer.email;
+  if (!customerEmail) return;
 
   const location = await prisma.location.findUnique({
     where: { id: params.locationId },
@@ -421,8 +424,7 @@ async function sendOnlineConfirmationEmail(params: {
   const manageUrl = buildAppointmentManageUrl(params.tenantId, accessToken.token);
 
   const customerName =
-    `${appointment.customer.firstName ?? ""} ${appointment.customer.lastName ?? ""}`.replace(/\s+/g, " ").trim() ||
-    "Kunde";
+    `${customer.firstName ?? ""} ${customer.lastName ?? ""}`.replace(/\s+/g, " ").trim() || "Kunde";
   const locationLabel =
     [location.name, location.addressLine1, location.city].filter(Boolean).join(" · ") || undefined;
   const tenantName =
@@ -452,7 +454,7 @@ async function sendOnlineConfirmationEmail(params: {
     attendees: [
       {
         name: customerName,
-        email: appointment.customer.email,
+        email: customerEmail,
       },
     ],
     remindersMinutesBefore: [60],
@@ -477,7 +479,7 @@ async function sendOnlineConfirmationEmail(params: {
       mailer.sendBookingConfirmation({
         to: {
           name: customerName,
-          email: appointment.customer.email!,
+          email: customerEmail,
         },
         fromName: emailSenderName,
         replyTo,
