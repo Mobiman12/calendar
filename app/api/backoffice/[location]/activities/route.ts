@@ -199,6 +199,7 @@ export async function GET(
       id: true,
       action: true,
       entityType: true,
+      entityId: true,
       actorType: true,
       context: true,
       diff: true,
